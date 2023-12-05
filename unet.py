@@ -29,7 +29,7 @@ def up_block(x, y, filters):
     return x
 
 
-def unet(input_size=(768, 768, 1), dropout=0.2):
+def unet(input_size=(256, 256, 1), dropout=0.2):
     filters = [64, 128, 256, 512, 1024]
     input = Input(shape=input_size)
     x, skip1 = down_block(input, filters[0])
