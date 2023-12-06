@@ -89,7 +89,7 @@ def get_test_data():
         target_size=(128, 128),
         class_mode=None,
         batch_size=BATCH_SIZE,
-        seed=43
+        seed=73
     )
 
     return test_generator

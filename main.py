@@ -8,9 +8,8 @@ import matplotlib.pyplot as plt
 
 
 def create_mask(prediction: np.ndarray):
-    # TODO play with 1e-17 value
-    f = lambda t: 1 if t <= 1e-17 else 0
-    f = np.vectorize(f)
+    threshold = 8e-19
+    f = np.vectorize(lambda t: 1 if t <= threshold else 0)
     return f(prediction)
 
 
@@ -27,7 +26,7 @@ if __name__ == "__main__":
 
     predictions = model.predict(images)
 
-    for i in range(0, 64, 3):
+    for i in range(0, 64, 4):
         image = images[i]
 
         mask = create_mask(predictions[i])
@@ -36,9 +35,11 @@ if __name__ == "__main__":
         min = predictions[i].min(axis=0)
         debug_mask = mask.reshape((128, 128))
 
+        plt.subplot(1, 2, 1)
         plt.imshow(image)
-        plt.show()
 
+        plt.subplot(1, 2, 2)
         plt.imshow(array_to_img(mask))
+
         plt.show()
         ...
