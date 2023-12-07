@@ -10,9 +10,6 @@ TEST_CSV_FILE = "../airbus-ship-detection/sample_submission_v2.csv"
 
 BATCH_SIZE = 64
 
-drop_row_list = []
-
-
 def get_train_data():
     # TODO: put df, validation, seed split to parameters
 
@@ -89,7 +86,7 @@ def get_test_data():
         target_size=(128, 128),
         class_mode=None,
         batch_size=BATCH_SIZE,
-        seed=73
+        seed=123
     )
 
     return test_generator

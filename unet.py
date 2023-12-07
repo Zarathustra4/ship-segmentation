@@ -1,55 +1,79 @@
-from keras import Input, models
-from keras.layers import Conv2D, BatchNormalization, MaxPooling2D, UpSampling2D, Concatenate, Dropout, Flatten
+import tensorflow as tf
+from tensorflow_examples.models.pix2pix import pix2pix
+
+from data_generator import get_train_data
+
+base_model = tf.keras.applications.MobileNetV2(input_shape=[128, 128, 3], include_top=False)
+
+layer_names = [
+    'block_1_expand_relu',
+    'block_3_expand_relu',
+    'block_6_expand_relu',
+    'block_13_expand_relu',
+    'block_16_project',
+]
+base_model_outputs = [base_model.get_layer(name).output for name in layer_names]
+
+down_stack = tf.keras.Model(inputs=base_model.input, outputs=base_model_outputs)
+
+down_stack.trainable = False
+
+up_stack = [
+    pix2pix.upsample(512, 3),  # 4x4 -> 8x8
+    pix2pix.upsample(256, 3),  # 8x8 -> 16x16
+    pix2pix.upsample(128, 3),  # 16x16 -> 32x32
+    pix2pix.upsample(64, 3),  # 32x32 -> 64x64
+    pix2pix.upsample(32, 3),  # 64x64 -> 128x128
+]
 
 
-def down_block(x, filters, user_max_pool=True):
-    x = Conv2D(filters,
-               3,
-               activation='relu',
-               padding='same',
-               kernel_initializer='HeNormal')(x)
-    x = BatchNormalization()(x)
+def unet_model():
+    inputs = tf.keras.layers.Input(shape=[128, 128, 3])
 
-    if user_max_pool:
-        return MaxPooling2D(strides=(2, 2))(x), x
+    skips = down_stack(inputs)
+    x = skips[-1]
+    skips = reversed(skips[:-1])
 
-    return x
+    for up, skip in zip(up_stack, skips):
+        x = up(x)
+        concat = tf.keras.layers.Concatenate()
+        x = concat([x, skip])
 
+    last = tf.keras.layers.Conv2DTranspose(
+        filters=1, kernel_size=3, strides=2,
+        activation="sigmoid",
+        padding='same')
 
-def up_block(x, y, filters):
-    x = UpSampling2D()(x)
-    x = Concatenate(axis=3)([x, y])
+    x = last(x)
 
-    x = Conv2D(filters,
-               3,
-               activation='relu',
-               padding='same',
-               kernel_initializer='HeNormal')(x)
-    x = BatchNormalization()(x)
-    return x
-
-
-def unet(input_size=(256, 256, 1), dropout=0.2):
-    filters = [64, 128, 256, 512, 1024]
-    input = Input(shape=input_size)
-    x, skip1 = down_block(input, filters[0])
-    x, skip2 = down_block(x, filters[1])
-    x, skip3 = down_block(x, filters[2])
-    x, skip4 = down_block(x, filters[3])
-    x = down_block(x, filters[4], user_max_pool=False)
-
-    x = up_block(x, skip4, filters[3])
-    x = up_block(x, skip3, filters[2])
-    x = up_block(x, skip2, filters[1])
-    x = up_block(x, skip1, filters[0])
-
-    x = Dropout(dropout)(x)
-    output = Conv2D(1, (1, 1), activation='sigmoid')(x)
-
-    model = models.Model(input, output, name='unet')
-    return model
+    return tf.keras.Model(inputs=inputs, outputs=x)
 
 
 if __name__ == "__main__":
-    model = unet()
+    from dice_score import dice_coef
+    from keras.optimizers import Adam
+    from PIL import ImageFile
+    import keras
+
+    ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+    OUTPUT_CLASSES = 1
+    MODEL_PATH = "E:\\Programming\\Image Segmentation\\ship_segmentation\\model\\unet-model.h5"
+    TRAINED_WEIGHTS_PATH = "E:\\Programming\\Image Segmentation\\ship_segmentation\\model\\unet-weights.h5"
+
+    model = unet_model()
     model.summary()
+    model.compile(optimizer=Adam(learning_rate=0.01),
+                  loss=tf.keras.losses.BinaryCrossentropy(),
+                  metrics=[dice_coef])
+
+    train_generator, validation_generator = get_train_data()
+
+    history = model.fit(train_generator,
+                        validation_data=validation_generator,
+                        epochs=5,
+                        steps_per_epoch=100,
+                        validation_steps=20)
+
+    model.save(MODEL_PATH)
+    model.save_weights(TRAINED_WEIGHTS_PATH)

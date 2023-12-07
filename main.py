@@ -22,6 +22,7 @@ if __name__ == "__main__":
 
     test_data = get_test_data()
 
+    next(test_data)
     images = next(test_data)
 
     predictions = model.predict(images)
