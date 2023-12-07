@@ -2,11 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 import pandas as pd
+from config import ORIG_SHAPE
 
-SHAPE = (768, 768)
 
-
-def generate_image_mask(pixels, shape=SHAPE):
+def generate_image_mask(pixels, shape=ORIG_SHAPE):
     if not pixels:
         return np.zeros(shape)
     if len(pixels) % 2 != 0:
@@ -23,7 +22,7 @@ def generate_image_mask(pixels, shape=SHAPE):
     return mask.reshape(shape).T
 
 
-def generate_mask(pixels, shape=SHAPE):
+def generate_mask(pixels, shape=ORIG_SHAPE):
     if not pixels:
         return np.zeros((1, shape[0] * shape[1]))
     if len(pixels) % 2 != 0:
@@ -40,7 +39,7 @@ def generate_mask(pixels, shape=SHAPE):
     return mask
 
 
-def display_mask(mask: np.ndarray, shape=SHAPE):
+def display_mask(mask: np.ndarray, shape=ORIG_SHAPE):
     mask = mask.reshape(shape).T
     plt.imshow(mask)
     plt.show()

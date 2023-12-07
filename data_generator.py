@@ -1,14 +1,8 @@
 from sklearn.model_selection import train_test_split
 import pandas as pd
 from keras_preprocessing.image import ImageDataGenerator
+from config import CSV_FILE, IMAGES_DIR, BATCH_SIZE, MASKS_DIR, TEST_CSV_FILE, TEST_IMAGES_DIR
 
-IMAGES_DIR = "../airbus-ship-detection/train_v2"
-MASKS_DIR = "../airbus-ship-detection/train_masks"
-TEST_IMAGES_DIR = "../airbus-ship-detection/test_v2"
-CSV_FILE = "../airbus-ship-detection/train_ship_segmentations_v2.csv"
-TEST_CSV_FILE = "../airbus-ship-detection/sample_submission_v2.csv"
-
-BATCH_SIZE = 64
 
 def get_train_data():
     # TODO: put df, validation, seed split to parameters
