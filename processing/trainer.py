@@ -1,16 +1,15 @@
 import keras
-from keras.optimizers import Adam
 import tensorflow as tf
 import pandas as pd
 
 from config import MODEL_PATH, TRAINED_WEIGHTS_PATH, VALIDATION_PART, CSV_FILE
 from processing.data_generator import get_train_data
-from processing.dice_score import dice_coef
+from processing.metrics import dice_score, IoU, dice_loss
 from processing.unet import unet
 
 # Default training values
 EPOCHS = 10
-STEPS_PER_EPOCH = 100
+STEPS_PER_EPOCH = 200
 VALIDATION_STEPS = int(STEPS_PER_EPOCH * VALIDATION_PART)
 
 
@@ -32,9 +31,11 @@ def train_unet(
     """
     df = pd.read_csv(CSV_FILE)
 
-    model.compile(optimizer=Adam(learning_rate=0.01),
-                  loss=tf.keras.losses.BinaryCrossentropy(),
-                  metrics=[dice_coef])
+    # df = df[df["EncodedPixels"].notna()]
+
+    model.compile(optimizer="adam",
+                  loss=dice_loss,
+                  metrics=[dice_score])
 
     train_generator, validation_generator = get_train_data(df, validation_split=VALIDATION_PART)
 

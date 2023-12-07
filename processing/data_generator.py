@@ -23,10 +23,9 @@ def get_train_data(df: pd.DataFrame,
         rescale=1. / 255,
         horizontal_flip=True,
         vertical_flip=True,
-        fill_mode='nearest'
     )
 
-    train_df, val_df = train_test_split(df, test_size=validation_split, random_state=seed)
+    train_df, val_df = train_test_split(df, test_size=validation_split)
 
     train_generator = datagen.flow_from_dataframe(
         dataframe=train_df,

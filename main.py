@@ -1,6 +1,6 @@
 import config as conf
 import keras
-from processing.dice_score import dice_coef
+from processing.metrics import dice_score, dice_loss
 from data_preparation.mask_creator import save_all_masks
 from inference.test import plot_masks
 from processing.trainer import train_unet
@@ -14,7 +14,7 @@ def load_model(
 ):
     model: keras.models.Model = keras.models.load_model(
         model_path,
-        custom_objects={"dice_coef": dice_coef}
+        custom_objects={"dice_score": dice_score, "dice_loss": dice_loss}
     )
     model.load_weights(weight_path)
 
@@ -37,7 +37,7 @@ def main(
         model = load_model()
 
     if train_model:
-        train_unet(model, epochs=7)
+        train_unet(model, epochs=20)
 
     if test:
         model = load_model()
@@ -45,7 +45,4 @@ def main(
 
 
 if __name__ == "__main__":
-    main(
-        new_model=False,
-        train_model=False
-    )
+    main(new_model=False, train_model=False)

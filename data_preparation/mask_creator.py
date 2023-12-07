@@ -27,7 +27,7 @@ def generate_image_mask(pixels, shape=ORIG_SHAPE) -> np.ndarray:
         start_pixel = pixels[i] - 1
         n_pixels = pixels[i + 1]
         end_pixel = start_pixel + n_pixels
-        mask[start_pixel: end_pixel] = 1
+        mask[start_pixel: end_pixel] = 255
 
     return mask.reshape(shape).T
 
@@ -85,4 +85,4 @@ if __name__ == "__main__":
 
     df = pd.read_csv(conf.CSV_FILE, delimiter=",")
 
-    # save_all_masks(df)
+    save_all_masks(df)

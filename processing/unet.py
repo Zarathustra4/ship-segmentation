@@ -60,12 +60,9 @@ def create_unet(down_stack, up_stack):
         x = concat([x, skip])
 
     # Final layer uses sigmoid activation for logistic separation
-    last = tf.keras.layers.Conv2DTranspose(
-        filters=1, kernel_size=3, strides=2,
-        activation="sigmoid",
-        padding='same')
+    x = tf.keras.layers.UpSampling2D()(x)
 
-    x = last(x)
+    x = tf.keras.layers.Conv2D(filters=1, kernel_size=1, activation="sigmoid")(x)
 
     return tf.keras.Model(inputs=inputs, outputs=x)
 
