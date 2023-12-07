@@ -10,13 +10,13 @@ from config import TEST_CSV_FILE
 
 
 def create_mask(prediction: np.ndarray):
-    threshold = 3e-19
+    threshold = 7e-14
     f = np.vectorize(lambda t: 1 if t <= threshold else 0)
     return f(prediction)
 
 
 def plot_masks(model: keras.models.Model):
-    test_data = get_test_data(pd.read_csv(TEST_CSV_FILE), seed=563)
+    test_data = get_test_data(pd.read_csv(TEST_CSV_FILE), seed=53)
 
     images = next(test_data)
 
@@ -37,11 +37,13 @@ def plot_masks(model: keras.models.Model):
 
 
 if __name__ == "__main__":
+    import config as conf
+
     model: keras.models.Model = keras.models.load_model(
-        "../model/unet-model.h5",
+        conf.MODEL_PATH,
         custom_objects={"dice_coef": dice_coef}
     )
-    model.load_weights("../model/unet-weights.h5")
+    model.load_weights(conf.TRAINED_WEIGHTS_PATH)
 
     plot_masks(model)
 

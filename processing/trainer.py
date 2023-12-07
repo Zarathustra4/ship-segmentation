@@ -9,7 +9,7 @@ from processing.data_generator import get_train_data
 from processing.dice_score import dice_coef
 from processing.unet import unet
 
-EPOCHS = 2
+EPOCHS = 10
 STEPS_PER_EPOCH = 100
 VALIDATION_STEPS = int(STEPS_PER_EPOCH * VALIDATION_PART)
 
@@ -21,14 +21,13 @@ def train_unet(
         validation_steps=VALIDATION_STEPS,
         save_model=True
 ):
-    ImageFile.LOAD_TRUNCATED_IMAGES = True
+    df = pd.read_csv(CSV_FILE)
 
     model.compile(optimizer=Adam(learning_rate=0.01),
                   loss=tf.keras.losses.BinaryCrossentropy(),
                   metrics=[dice_coef])
 
-    train_generator, validation_generator = get_train_data(pd.read_csv(CSV_FILE),
-                                                           validation_split=VALIDATION_PART)
+    train_generator, validation_generator = get_train_data(df, validation_split=VALIDATION_PART)
 
     model.fit(train_generator,
               validation_data=validation_generator,
