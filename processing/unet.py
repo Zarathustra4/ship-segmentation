@@ -3,14 +3,20 @@ from tensorflow_examples.models.pix2pix import pix2pix
 
 
 def encoder():
+    """
+    Returns a stack of encoding layers.
+    The layers are pretrained.
+    Use pip install git+https://github.com/tensorflow/examples.git
+    :return: encoder model
+    """
     base_model = tf.keras.applications.MobileNetV2(input_shape=[128, 128, 3], include_top=False)
 
     layer_names = [
-        'block_1_expand_relu',
-        'block_3_expand_relu',
-        'block_6_expand_relu',
-        'block_13_expand_relu',
-        'block_16_project',
+        'block_1_expand_relu',  # 128x128 -> 64x64
+        'block_3_expand_relu',  # 64x64 -> 32x32
+        'block_6_expand_relu',  # 32x32 -> 16x16
+        'block_13_expand_relu',  # 16x16 -> 8x8
+        'block_16_project',  # 8x8 -> 4x4
     ]
     base_model_outputs = [base_model.get_layer(name).output for name in layer_names]
 
@@ -22,6 +28,10 @@ def encoder():
 
 
 def decoder():
+    """
+    Returns an array of decoding layers
+    :return: list of decoding layers
+    """
     return [
         pix2pix.upsample(512, 3),  # 4x4 -> 8x8
         pix2pix.upsample(256, 3),  # 8x8 -> 16x16
@@ -32,6 +42,12 @@ def decoder():
 
 
 def create_unet(down_stack, up_stack):
+    """
+    Combines encoder and decoder and returns final model
+    :param down_stack: encoder model
+    :param up_stack: list of decoding layers
+    :return: unet model
+    """
     inputs = tf.keras.layers.Input(shape=[128, 128, 3])
 
     skips = down_stack(inputs)
@@ -43,6 +59,7 @@ def create_unet(down_stack, up_stack):
         concat = tf.keras.layers.Concatenate()
         x = concat([x, skip])
 
+    # Final layer uses sigmoid activation for logistic separation
     last = tf.keras.layers.Conv2DTranspose(
         filters=1, kernel_size=3, strides=2,
         activation="sigmoid",
@@ -54,6 +71,9 @@ def create_unet(down_stack, up_stack):
 
 
 def unet():
+    """
+    :return: Complete unet model
+    """
     return create_unet(
         encoder(),
         decoder()
@@ -63,4 +83,3 @@ def unet():
 if __name__ == "__main__":
     model = unet()
     model.summary()
-

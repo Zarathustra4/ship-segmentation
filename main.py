@@ -37,7 +37,7 @@ def main(
         model = load_model()
 
     if train_model:
-        train_unet(model, epochs=10)
+        train_unet(model, epochs=7)
 
     if test:
         model = load_model()

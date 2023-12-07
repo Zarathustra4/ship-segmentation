@@ -7,9 +7,18 @@ from config import IMAGES_DIR, BATCH_SIZE, MASKS_DIR, TEST_IMAGES_DIR
 def get_train_data(df: pd.DataFrame,
                    validation_split: float,
                    seed: int = 42):
+    """
+    Creates data generators of images and masks for model training and validation
+    :param df: dataframe with ImageIds
+    :param validation_split: percent of validation data
+    :param seed: random seed
+    :return: train_generator, validation_generator
+    """
+
     if validation_split > 1 or validation_split < 0:
         raise ValueError("validation_split parameter must be within 0 and 1")
 
+    # Use data augmentation and normalization
     datagen = ImageDataGenerator(
         rescale=1. / 255,
         horizontal_flip=True,
@@ -67,6 +76,13 @@ def get_train_data(df: pd.DataFrame,
 
 
 def get_test_data(df: pd.DataFrame, seed: int = 42):
+    """
+    Returns test image generator
+    :param df: pandas dataframe with ImageIds
+    :param seed: random seed
+    :return: test_generator
+    """
+
     datagen = ImageDataGenerator(rescale=1. / 255)
 
     test_generator = datagen.flow_from_dataframe(

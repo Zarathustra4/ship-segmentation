@@ -6,23 +6,36 @@ import pandas as pd
 from processing.data_generator import get_test_data
 from processing.dice_score import dice_coef
 import matplotlib.pyplot as plt
-from config import TEST_CSV_FILE
+import config as conf
 
 
 def create_mask(prediction: np.ndarray):
+    """
+    Creates mask of given prediction to be displayed
+    :param prediction: prediction of a model
+    :return: mask of the prediction
+    """
+
+    # The threshold is the crucial variable for the mask creation.
     threshold = 7e-20
     f = np.vectorize(lambda t: 1 if t <= threshold else 0)
     return f(prediction)
 
 
 def plot_masks(model: keras.models.Model):
-    test_data = get_test_data(pd.read_csv(TEST_CSV_FILE), seed=345)
+    """
+    Plots some sample of predicted data
+    :param model: keras model
+    :return: None
+    """
+    test_data = get_test_data(pd.read_csv(conf.TEST_CSV_FILE), seed=345)
 
     images = next(test_data)
 
     predictions = model.predict(images)
 
-    for i in range(0, 32, 4):
+    # Go through predictions and plot their masks
+    for i in range(0, conf.BATCH_SIZE, 4):
         image = images[i]
 
         mask = create_mask(predictions[i])
@@ -37,8 +50,6 @@ def plot_masks(model: keras.models.Model):
 
 
 if __name__ == "__main__":
-    import config as conf
-
     model: keras.models.Model = keras.models.load_model(
         conf.MODEL_PATH,
         custom_objects={"dice_coef": dice_coef}
@@ -46,4 +57,3 @@ if __name__ == "__main__":
     model.load_weights(conf.TRAINED_WEIGHTS_PATH)
 
     plot_masks(model)
-
