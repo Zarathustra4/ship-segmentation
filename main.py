@@ -46,6 +46,6 @@ def main(
 
 if __name__ == "__main__":
     main(
-        new_model=True,
-        train_model=True
+        new_model=False,
+        train_model=False
     )

@@ -17,7 +17,7 @@ def create_mask(prediction: np.ndarray):
     """
 
     # The threshold is the crucial variable for the mask creation.
-    threshold = 7e-20
+    threshold = 5e-18
     f = np.vectorize(lambda t: 1 if t <= threshold else 0)
     return f(prediction)
 
@@ -28,7 +28,7 @@ def plot_masks(model: keras.models.Model):
     :param model: keras model
     :return: None
     """
-    test_data = get_test_data(pd.read_csv(conf.TEST_CSV_FILE), seed=345)
+    test_data = get_test_data(pd.read_csv(conf.TEST_CSV_FILE), seed=42)
 
     images = next(test_data)
 
