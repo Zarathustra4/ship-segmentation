@@ -2,8 +2,9 @@ import keras
 from PIL import ImageFile
 from keras.optimizers import Adam
 import tensorflow as tf
+import pandas as pd
 
-from config import MODEL_PATH, TRAINED_WEIGHTS_PATH, VALIDATION_PART
+from config import MODEL_PATH, TRAINED_WEIGHTS_PATH, VALIDATION_PART, CSV_FILE
 from data_generator import get_train_data
 from dice_score import dice_coef
 from unet import unet
@@ -26,7 +27,8 @@ def train_unet(
                   loss=tf.keras.losses.BinaryCrossentropy(),
                   metrics=[dice_coef])
 
-    train_generator, validation_generator = get_train_data()
+    train_generator, validation_generator = get_train_data(pd.read_csv(CSV_FILE),
+                                                           validation_split=VALIDATION_PART)
 
     model.fit(train_generator,
               validation_data=validation_generator,
@@ -41,4 +43,4 @@ def train_unet(
 
 if __name__ == "__main__":
     model = unet()
-    train_unet(model, epochs=1)
+    train_unet(model, epochs=5)
