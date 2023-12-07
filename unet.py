@@ -63,13 +63,6 @@ def unet():
 
 
 if __name__ == "__main__":
-    from dice_score import dice_coef
-    from keras.optimizers import Adam
-    from PIL import ImageFile
-    import keras
-
-    ImageFile.LOAD_TRUNCATED_IMAGES = True
-
     model = unet()
     model.summary()
 

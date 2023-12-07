@@ -1,12 +1,13 @@
 import keras
 import numpy as np
 from keras.utils import array_to_img
+from scipy import ndimage
+import pandas as pd
 
 from data_generator import get_test_data
 from dice_score import dice_coef
 import matplotlib.pyplot as plt
 from config import TEST_CSV_FILE
-import pandas as pd
 
 
 def create_mask(prediction: np.ndarray):
@@ -15,15 +16,14 @@ def create_mask(prediction: np.ndarray):
     return f(prediction)
 
 
-def test_model(model: keras.models.Model):
+def plot_masks(model: keras.models.Model):
     test_data = get_test_data(pd.read_csv(TEST_CSV_FILE), seed=563)
 
-    next(test_data)
     images = next(test_data)
 
     predictions = model.predict(images)
 
-    for i in range(0, 64, 4):
+    for i in range(0, 32, 4):
         image = images[i]
 
         mask = create_mask(predictions[i])
@@ -44,5 +44,5 @@ if __name__ == "__main__":
     )
     model.load_weights("model/unet-weights.h5")
 
-    test_model(model)
+    plot_masks(model)
 

@@ -43,4 +43,4 @@ def train_unet(
 
 if __name__ == "__main__":
     model = unet()
-    train_unet(model, epochs=5)
+    train_unet(model, epochs=1)

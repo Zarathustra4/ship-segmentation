@@ -51,6 +51,12 @@ def save_mask(mask: np.ndarray, image_name: str):
 
 
 def save_all_masks(df: pd.DataFrame):
+    df['EncodedPixels'] = df['EncodedPixels'].apply(
+        lambda pixels: [int(item) for item in pixels.split(" ")] if pd.notna(pixels) else []
+    )
+
+    size = len(df)
+
     count = 0
     for index, row in df.iterrows():
         if count % 100 == 0:
@@ -65,12 +71,7 @@ def save_all_masks(df: pd.DataFrame):
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("../airbus-ship-detection/train_ship_segmentations_v2.csv", delimiter=",")
-
-    size = len(df)
-
-    df['EncodedPixels'] = df['EncodedPixels'].apply(
-        lambda pixels: [int(item) for item in pixels.split(" ")] if pd.notna(pixels) else []
-    )
+    import config as conf
+    df = pd.read_csv(conf.CSV_FILE, delimiter=",")
 
     # save_all_masks(df)
