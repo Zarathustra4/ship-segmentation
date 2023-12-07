@@ -1,10 +1,10 @@
 import config as conf
 import keras
-from dice_score import dice_coef
-from mask_creator import save_all_masks
-from test import plot_masks
-from trainer import train_unet
-from unet import unet
+from processing.dice_score import dice_coef
+from data_preparation.mask_creator import save_all_masks
+from inference.test import plot_masks
+from processing.trainer import train_unet
+from processing.unet import unet
 import pandas as pd
 
 
@@ -37,7 +37,7 @@ def main(
         model = load_model()
 
     if train_model:
-        train_unet(model, epochs=1)
+        train_unet(model, epochs=10)
 
     if test:
         model = load_model()

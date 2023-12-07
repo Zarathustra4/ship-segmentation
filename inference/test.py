@@ -1,11 +1,10 @@
 import keras
 import numpy as np
 from keras.utils import array_to_img
-from scipy import ndimage
 import pandas as pd
 
-from data_generator import get_test_data
-from dice_score import dice_coef
+from processing.data_generator import get_test_data
+from processing.dice_score import dice_coef
 import matplotlib.pyplot as plt
 from config import TEST_CSV_FILE
 
@@ -39,10 +38,10 @@ def plot_masks(model: keras.models.Model):
 
 if __name__ == "__main__":
     model: keras.models.Model = keras.models.load_model(
-        "model/unet-model.h5",
+        "../model/unet-model.h5",
         custom_objects={"dice_coef": dice_coef}
     )
-    model.load_weights("model/unet-weights.h5")
+    model.load_weights("../model/unet-weights.h5")
 
     plot_masks(model)
 

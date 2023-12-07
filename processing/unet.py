@@ -1,8 +1,6 @@
 import tensorflow as tf
 from tensorflow_examples.models.pix2pix import pix2pix
 
-from data_generator import get_train_data
-
 
 def encoder():
     base_model = tf.keras.applications.MobileNetV2(input_shape=[128, 128, 3], include_top=False)

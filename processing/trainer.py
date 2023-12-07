@@ -5,9 +5,9 @@ import tensorflow as tf
 import pandas as pd
 
 from config import MODEL_PATH, TRAINED_WEIGHTS_PATH, VALIDATION_PART, CSV_FILE
-from data_generator import get_train_data
-from dice_score import dice_coef
-from unet import unet
+from processing.data_generator import get_train_data
+from processing.dice_score import dice_coef
+from processing.unet import unet
 
 EPOCHS = 2
 STEPS_PER_EPOCH = 100
