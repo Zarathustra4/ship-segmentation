@@ -4,11 +4,11 @@
 
 ### Mask creation
 
-In csv file we have 2 field: ImageId, EncodedPixels.
+In csv file we have 2 fields: ImageId, EncodedPixels.
 We need to create masks using these
 encoded pixels to provide proper segmentation.
 
-Firstly a mask is a flat numpy array. Specified values are set to 255, other are 0.
+Firstly, we create a mask as a flat numpy array. Specified values are set to 255, other are 0.
 
 ```
 for i in range(0, len(pixels), 2):
@@ -93,13 +93,13 @@ The decoder is a set of ```pix2pix``` layers, which scales back the image:
 ```
 
 ```create_unet``` function combines the encoders and decoders with linear and skip connections.
-The last layer is a convolutional with 1 filter and sigmoid activation function. It's determine pixel
+The last layer is a convolutional with 1 filter and sigmoid activation function. It determines a pixel
 to be or not to be a part of a ship.
 
-To measure model performance we need to set proper metrics. Accuracy will be a bad idea
-because of unbalanced images - only few percent of an image is a ship if an image contains it at all.
+To measure model performance we need to set proper metrics. Accuracy is a bad idea
+because of unbalanced data - only few percent of an image is a ship if an image contains it at all.
 
-In this model I use __dice coefficient__. 
+In this model I use __dice coefficient__ as metric. 
 ``` 
 intersection = K.sum(y_true * y_pred, axis=[1, 2, 3])
 union = K.sum(y_true, axis=[1, 2, 3]) + K.sum(y_pred, axis=[1, 2, 3])
@@ -117,8 +117,6 @@ The metric is within 0 and 1. The closer it is to 1, the better model performs.
 To optimize model parameter I use dice score loss, which is simply:
 ```1 - dice_coef```
 
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/3884a9e7-c605-49e1-9486-8fbc5682be0d)
-
 ## Performance
 To train the model we need to run it with such configurations:
 ```
@@ -131,8 +129,8 @@ VALIDATION_STEPS = int(STEPS_PER_EPOCH * VALIDATION_PART)
 
 
 ## Testing
-To test model work we use images from ```test_v2``` directory. I plot model made prediction next to original image.
-In such way we may say is model work satisfying or not.
+To test model's work we use images from ```test_v2``` directory. I plot model made prediction next to original image.
+In such way we may say if model makes satisfying predictions (masks).
 
 ![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/4a72e561-fddb-4a85-aa4f-052c656c5f17)
 ![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/0215404c-e6e5-4dc4-9c94-c1a0c89a8e75)
