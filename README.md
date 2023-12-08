@@ -140,4 +140,5 @@ In such way we may say if model makes satisfying predictions (masks).
 ![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/93b6bf9d-1179-4b27-883b-fca31e88ed4d)
 
 
+In ```cvs_predictions``` module you can call ```create_csv_prediction``` method to write down prediction to a csv file in encoded way. 
 
