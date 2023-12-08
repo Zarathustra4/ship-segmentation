@@ -12,8 +12,6 @@ from processing.metrics import dice_score, dice_loss
 def create_csv_prediction(model: tf.keras.Model):
     df = pd.read_csv(conf.TEST_CSV_FILE)
 
-    # df["EncodedPixels"] = df["EncodedPixels"].astype(str)
-
     test_data_generator = get_test_data(df, seed=708)
 
     row_idx = 0
@@ -44,7 +42,7 @@ def encode_prediction(prediction: np.ndarray):
             encoded_pixels.append(str(i))
             i += 1
             count = 0
-            while prediction[i] > 0.5 and i < len(prediction):
+            while i < len(prediction) and prediction[i] > 0.5:
                 count += 1
                 i += 1
             encoded_pixels.append(str(count))

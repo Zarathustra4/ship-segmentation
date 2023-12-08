@@ -1,10 +1,16 @@
 import keras
+import numpy as np
 import pandas as pd
 
 from processing.data_generator import get_test_data
 from processing.metrics import dice_score, dice_loss
 import matplotlib.pyplot as plt
 import config as conf
+
+
+def create_mask(prediction):
+    f = np.vectorize(lambda x: 255 if x > 0.5 else 0)
+    return f(prediction)
 
 
 def plot_masks(model: keras.models.Model):
@@ -23,11 +29,14 @@ def plot_masks(model: keras.models.Model):
     for i in range(0, conf.BATCH_SIZE, 3):
         image = images[i]
 
-        plt.subplot(1, 2, 1)
+        plt.subplot(1, 3, 1)
         plt.imshow(image)
 
-        plt.subplot(1, 2, 2)
+        plt.subplot(1, 3, 2)
         plt.imshow(predictions[i])
+
+        plt.subplot(1, 3, 3)
+        plt.imshow(create_mask(predictions[i]))
 
         plt.show()
 
