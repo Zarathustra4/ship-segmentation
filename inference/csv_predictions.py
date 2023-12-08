@@ -4,7 +4,6 @@ import tensorflow as tf
 import keras
 from processing.data_generator import get_test_data
 import numpy as np
-import matplotlib.pyplot as plt
 import cv2
 
 from processing.metrics import dice_score, dice_loss
@@ -13,10 +12,14 @@ from processing.metrics import dice_score, dice_loss
 def create_csv_prediction(model: tf.keras.Model):
     df = pd.read_csv(conf.TEST_CSV_FILE)
 
+    df = df[:5]
+
     test_data_generator = get_test_data(df, seed=708)
 
     row_idx = 0
     for images in test_data_generator:
+        if row_idx >= len(df):
+            break
         predictions = model.predict(images)
         for prediction in predictions:
             encoded_pixels = encode_prediction(prediction)
