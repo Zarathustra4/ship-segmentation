@@ -137,6 +137,10 @@ def create_mask(prediction):
     f = np.vectorize(lambda x: 255 if x > 0.5 else 0)
     return f(prediction)
 ```
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/0557e714-1d68-4d46-8484-cfd713098f95)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/ae6787cb-3f4c-4383-989e-0e222238b3c5)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/d1003caf-b8c2-4d86-82f0-25947d864134)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/7c661e82-0df4-41a3-b6c3-45961e253b09)
 
 
 In ```cvs_predictions``` module you can call ```create_csv_prediction``` method to write down prediction to a csv file in encoded way. 
