@@ -131,13 +131,12 @@ VALIDATION_STEPS = int(STEPS_PER_EPOCH * VALIDATION_PART)
 ## Testing
 To test model's work we use images from ```test_v2``` directory. I plot model made prediction next to original image.
 In such way we may say if model makes satisfying predictions (masks).
-
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/4a72e561-fddb-4a85-aa4f-052c656c5f17)
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/0215404c-e6e5-4dc4-9c94-c1a0c89a8e75)
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/9df1ec55-5158-44ee-a7f7-bd0bb1ba14c8)
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/e88505d0-199d-46c8-a598-f8ac0d88f66b)
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/4bc11392-3436-4c7b-a9db-97480ea72aa4)
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/93b6bf9d-1179-4b27-883b-fca31e88ed4d)
+To clear the prediction image I use filter-mask:
+``` 
+def create_mask(prediction):
+    f = np.vectorize(lambda x: 255 if x > 0.5 else 0)
+    return f(prediction)
+```
 
 
 In ```cvs_predictions``` module you can call ```create_csv_prediction``` method to write down prediction to a csv file in encoded way. 
