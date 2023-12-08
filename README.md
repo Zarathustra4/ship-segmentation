@@ -145,3 +145,4 @@ def create_mask(prediction):
 
 In ```cvs_predictions``` module you can call ```create_csv_prediction``` method to write down prediction to a csv file in encoded way. 
 
+## The model in ```model``` directory is already trained and ready to use
