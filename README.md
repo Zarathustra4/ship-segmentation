@@ -30,6 +30,9 @@ folder. To do that I have created ```save_all_masks``` function.
 The process is time-consuming because of large amount of data.
 Perhaps, it is performed only once.
 
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/28908dc7-ab7a-4615-bf52-2aacd29de312)
+
+
 ### Data augmentation
 
 To augment data I used horizontal and vertical flips. Also image data is normalized.
@@ -44,6 +47,9 @@ datagen = ImageDataGenerator(
 ### Validation split
 
 Data is split by sklearn method ```train_test_split```. To do so, we put prepared pandas dataframe.
+
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/688313cd-439f-412b-9100-8a9db00e53ca)
+
 
 ## Model architecture
 
@@ -111,8 +117,25 @@ The metric is within 0 and 1. The closer it is to 1, the better model performs.
 To optimize model parameter I use dice score loss, which is simply:
 ```1 - dice_coef```
 
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/3884a9e7-c605-49e1-9486-8fbc5682be0d)
+
 ## Performance
+To train the model we need to run it with such configurations:
+```
+EPOCHS = 20
+STEPS_PER_EPOCH = 200
+VALIDATION_STEPS = int(STEPS_PER_EPOCH * VALIDATION_PART)
+```
+
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/5d0dacd1-1616-4ae3-b3ef-aab21521e890)
+
 
 ## Testing
 To test model work we use images from ```test_v2``` directory. I plot model made prediction next to original image.
 In such way we may say is model work satisfying or not.
+
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/4a72e561-fddb-4a85-aa4f-052c656c5f17)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/a9c152fb-8525-4632-8518-7f5df828a3c2)
+
+
+
