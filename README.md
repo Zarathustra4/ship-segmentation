@@ -125,7 +125,7 @@ STEPS_PER_EPOCH = 200
 VALIDATION_STEPS = int(STEPS_PER_EPOCH * VALIDATION_PART)
 ```
 
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/5d0dacd1-1616-4ae3-b3ef-aab21521e890)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/614f6cfa-c2c1-4037-b56f-05c8880c77e0)
 
 
 ## Testing
