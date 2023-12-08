@@ -135,7 +135,11 @@ To test model work we use images from ```test_v2``` directory. I plot model made
 In such way we may say is model work satisfying or not.
 
 ![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/4a72e561-fddb-4a85-aa4f-052c656c5f17)
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/a9c152fb-8525-4632-8518-7f5df828a3c2)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/0215404c-e6e5-4dc4-9c94-c1a0c89a8e75)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/9df1ec55-5158-44ee-a7f7-bd0bb1ba14c8)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/e88505d0-199d-46c8-a598-f8ac0d88f66b)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/4bc11392-3436-4c7b-a9db-97480ea72aa4)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/93b6bf9d-1179-4b27-883b-fca31e88ed4d)
 
 
 
