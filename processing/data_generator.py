@@ -92,7 +92,7 @@ def get_test_data(df: pd.DataFrame, seed: int = 42):
         target_size=(128, 128),
         class_mode=None,
         batch_size=BATCH_SIZE,
-        seed=seed
+        shuffle=False
     )
 
     return test_generator

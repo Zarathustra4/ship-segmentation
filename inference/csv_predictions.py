@@ -12,7 +12,7 @@ from processing.metrics import dice_score, dice_loss
 def create_csv_prediction(model: tf.keras.Model):
     df = pd.read_csv(conf.TEST_CSV_FILE)
 
-    test_data_generator = get_test_data(df, seed=708)
+    test_data_generator = get_test_data(df)
 
     row_idx = 0
     for images in test_data_generator:
@@ -24,7 +24,7 @@ def create_csv_prediction(model: tf.keras.Model):
             df.loc[row_idx, "EncodedPixels"] = encoded_pixels
             row_idx += 1
 
-    df.to_csv(conf.TEST_CSV_FILE)
+    df.to_csv(conf.TEST_CSV_FILE, index=False)
 
 
 def encode_prediction(prediction: np.ndarray):

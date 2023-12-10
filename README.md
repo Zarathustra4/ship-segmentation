@@ -8,7 +8,7 @@ In csv file we have 2 fields: ImageId, EncodedPixels.
 We need to create masks using these
 encoded pixels to provide proper segmentation.
 
-Firstly, we create a mask as a flat numpy array. Specified values are set to 255, other are 0.
+Firstly, we create a mask as a flat numpy array. Specified values are set to 255, other become 0.
 
 ```
 for i in range(0, len(pixels), 2):
@@ -24,7 +24,7 @@ After that the mask is reshaped:
 mask.reshape(shape).T
 ```
 
-Before create and train a model we need to store that masks at a
+Before creating and training a model we need to store that masks at a
 folder. To do that I have created ```save_all_masks``` function.
 
 The process is time-consuming because of large amount of data.
