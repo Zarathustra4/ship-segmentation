@@ -3,9 +3,12 @@ import tensorflow as tf
 import pandas as pd
 
 from config import MODEL_PATH, TRAINED_WEIGHTS_PATH, VALIDATION_PART, CSV_FILE
+from inference.ui_wrapper import get_model
 from processing.data_generator import get_train_data
 from processing.metrics import dice_score, IoU, dice_loss
 from processing.unet import unet
+
+# 819_200
 
 # Default training values
 EPOCHS = 10
@@ -31,8 +34,6 @@ def train_unet(
     """
     df = pd.read_csv(CSV_FILE)
 
-    # df = df[df["EncodedPixels"].notna()]
-
     model.compile(optimizer="adam",
                   loss=dice_loss,
                   metrics=[dice_score])
@@ -53,5 +54,5 @@ def train_unet(
 
 
 if __name__ == "__main__":
-    model = unet()
-    train_unet(model, epochs=1)
+    model = get_model()
+    train_unet(model, epochs=10)

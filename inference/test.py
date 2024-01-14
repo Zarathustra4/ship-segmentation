@@ -6,6 +6,7 @@ from processing.data_generator import get_test_data
 from processing.metrics import dice_score, dice_loss
 import matplotlib.pyplot as plt
 import config as conf
+import cv2
 
 
 def create_mask(prediction):
@@ -19,26 +20,59 @@ def plot_masks(model: keras.models.Model):
     :param model: keras model
     :return: None
     """
-    test_data = get_test_data(pd.read_csv(conf.TEST_CSV_FILE), seed=708)
+    test_data = get_test_data(pd.read_csv(conf.TEST_CSV_FILE), seed=333)
 
-    images = next(test_data)
+    for images in test_data:
 
-    predictions = model.predict(images)
+        predictions = model.predict(images)
 
-    # Go through predictions and plot their predictions
-    for i in range(0, conf.BATCH_SIZE, 3):
-        image = images[i]
+        # Go through predictions and plot their predictions
+        for i in range(0, conf.BATCH_SIZE, 1):
+            image = images[i]
 
-        plt.subplot(1, 3, 1)
-        plt.imshow(image)
+            plt.subplot(1, 3, 1)
+            plt.imshow(image)
 
-        plt.subplot(1, 3, 2)
-        plt.imshow(predictions[i])
+            plt.subplot(1, 3, 2)
+            plt.imshow(predictions[i])
 
-        plt.subplot(1, 3, 3)
-        plt.imshow(create_mask(predictions[i]))
+            plt.subplot(1, 3, 3)
+            plt.imshow(create_mask(predictions[i]))
 
-        plt.show()
+            plt.show()
+
+
+def test_images(model):
+    from config import TEST_IMAGES_DIR
+    import os
+
+    # TODO: The issue is in handling image before model processing
+
+    image_name = input(">>>") + ".jpg"
+    while image_name.upper() != "Q":
+        try:
+            image = cv2.imread(os.path.join(TEST_IMAGES_DIR, image_name))
+            image = cv2.resize(image, (128, 128))
+
+            image = np.array(image)
+
+            prediction = model.predict(image.reshape(1, 128, 128, 3))[0]
+
+            plt.subplot(1, 3, 1)
+            plt.imshow(image)
+
+            plt.subplot(1, 3, 2)
+            plt.imshow(prediction)
+
+            plt.subplot(1, 3, 3)
+            plt.imshow(create_mask(prediction))
+
+            plt.show()
+
+        except Exception as e:
+            ...
+
+        image_name = input(">>>") + "jpg"
 
 
 if __name__ == "__main__":
@@ -48,4 +82,4 @@ if __name__ == "__main__":
     )
     model.load_weights(conf.TRAINED_WEIGHTS_PATH)
 
-    plot_masks(model)
+    test_images(model)

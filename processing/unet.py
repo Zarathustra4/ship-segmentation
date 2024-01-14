@@ -1,5 +1,6 @@
 import tensorflow as tf
 from tensorflow_examples.models.pix2pix import pix2pix
+from config import TARGET_SIZE as target
 
 
 def encoder():
@@ -9,7 +10,7 @@ def encoder():
     Use pip install git+https://github.com/tensorflow/examples.git
     :return: encoder model
     """
-    base_model = tf.keras.applications.MobileNetV2(input_shape=[128, 128, 3], include_top=False)
+    base_model = tf.keras.applications.MobileNetV2(input_shape=[target, target, 3], include_top=False)
 
     layer_names = [
         'block_1_expand_relu',  # 128x128 -> 64x64
@@ -48,7 +49,7 @@ def create_unet(down_stack, up_stack):
     :param up_stack: list of decoding layers
     :return: unet model
     """
-    inputs = tf.keras.layers.Input(shape=[128, 128, 3])
+    inputs = tf.keras.layers.Input(shape=[target, target, 3])
 
     skips = down_stack(inputs)
     x = skips[-1]

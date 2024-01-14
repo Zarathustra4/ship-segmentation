@@ -1,6 +1,8 @@
 # Configuration variables and global constant variables
 
 ORIG_SHAPE = (768, 768)
+TARGET_SIZE = 128  # TODO: Try 256
+
 
 IMAGES_DIR = "E:\\Programming\\Image Segmentation\\airbus-ship-detection\\train_v2"
 MASKS_DIR = "E:\\Programming\\Image Segmentation\\airbus-ship-detection\\train_masks"
