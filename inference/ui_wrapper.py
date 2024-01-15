@@ -12,7 +12,7 @@ import tensorflow as tf
 
 def create_mask(prediction):
     """Creates mask of model prediction"""
-    f = np.vectorize(lambda x: 255 if x > 0.3 else 0)
+    f = np.vectorize(lambda x: 255 if x > 0.5 else 0)
     return f(prediction)
 
 
@@ -36,7 +36,8 @@ def prepare_image(image):
 
 def smooth_prediction(prediction):
     """
-    Smooths prediction image
+    Smooths prediction image.
+    Use it if model target size is 128x128
     """
     # kernel for small ships at raw prediction
     small_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
@@ -71,9 +72,9 @@ def smooth_prediction(prediction):
 
 
 def prepare_mask(prediction):
+    """Prepares mask. Use it if model target size is 128x128"""
     smoothed = smooth_prediction(prediction)
     smoothed = cv2.resize(smoothed, (768, 768), interpolation=cv2.INTER_NEAREST)
-    prediction = cv2.resize(prediction, (768, 768), interpolation=cv2.INTER_NEAREST)
     return create_mask(smoothed)
 
 
@@ -95,6 +96,10 @@ def run_ui():
     image = prepare_image(image)
 
     prediction = model.predict(image)[0]
-    mask = prepare_mask(prediction)
 
-    st.image(mask, width=768, caption="Smoothed")
+    prediction = cv2.resize(prediction, (768, 768))
+
+    mask = create_mask(prediction)
+    
+    st.image(prediction, caption="Model prediction", width=768)
+    st.image(mask, caption="Mask", width=768)

@@ -9,7 +9,7 @@ from processing.unet import unet
 
 # Default training values
 EPOCHS = 10
-STEPS_PER_EPOCH = 200
+STEPS_PER_EPOCH = 1000
 VALIDATION_STEPS = int(STEPS_PER_EPOCH * VALIDATION_PART)
 
 
@@ -32,7 +32,7 @@ def train_unet(
     df = pd.read_csv(CSV_FILE)
 
     model.compile(optimizer="adam",
-                  loss=dice_loss,
+                  loss="binary_crossentropy",
                   metrics=[dice_score])
 
     train_generator, validation_generator = get_train_data(df, validation_split=VALIDATION_PART)
@@ -55,4 +55,4 @@ if __name__ == "__main__":
     # model = unet()
 
     model = get_trained_model()
-    train_unet(model, epochs=5)
+    train_unet(model, epochs=10)

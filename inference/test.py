@@ -20,7 +20,7 @@ def plot_masks(model: keras.models.Model, n_images=20):
     :param n_images: int - number of images
     :return: None
     """
-    test_data = get_test_data(pd.read_csv(conf.TEST_CSV_FILE), seed=333)
+    test_data = get_test_data(pd.read_csv(conf.TEST_CSV_FILE))
 
     count = 0
     for images in test_data:
