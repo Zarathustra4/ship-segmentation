@@ -1,14 +1,11 @@
 import keras
-import tensorflow as tf
 import pandas as pd
 
 from config import MODEL_PATH, TRAINED_WEIGHTS_PATH, VALIDATION_PART, CSV_FILE
-from inference.ui_wrapper import get_model
-from processing.data_generator import get_train_data
-from processing.metrics import dice_score, IoU, dice_loss
+from inference.ui_wrapper import get_trained_model
+from data_preparation.data_generator import get_train_data
+from processing.metrics import dice_score, dice_loss
 from processing.unet import unet
-
-# 819_200
 
 # Default training values
 EPOCHS = 10
@@ -25,8 +22,8 @@ def train_unet(
 ):
     """
     Trains model and validates this
-    :param model: keras model
     :param epochs: number of epochs
+    :param model: keras model
     :param steps_per_epoch: number of steps per epoch for training
     :param validation_steps: number of steps per for validation
     :param save_model: if True -> saves a trained model
@@ -54,5 +51,8 @@ def train_unet(
 
 
 if __name__ == "__main__":
-    model = get_model()
-    train_unet(model, epochs=10)
+    #  If you want to train new model, use:
+    # model = unet()
+
+    model = get_trained_model()
+    train_unet(model, epochs=5)
