@@ -11,11 +11,13 @@ import tensorflow as tf
 
 
 def create_mask(prediction):
+    """Creates mask of model prediction"""
     f = np.vectorize(lambda x: 255 if x > 0.3 else 0)
     return f(prediction)
 
 
 def get_trained_model():
+    """Loads trained model"""
     model: keras.models.Model = keras.models.load_model(
         conf.MODEL_PATH,
         custom_objects={"dice_score": dice_score, "dice_loss": dice_loss}
@@ -25,6 +27,7 @@ def get_trained_model():
 
 
 def prepare_image(image):
+    """Prepares image for model"""
     resized_cv = tf.image.resize(image, (TARGET, TARGET))
     resized_numpy = np.array(resized_cv)
 
@@ -32,27 +35,39 @@ def prepare_image(image):
 
 
 def smooth_prediction(prediction):
+    """
+    Smooths prediction image
+    """
+    # kernel for small ships at raw prediction
     small_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
+    # kernel for middle ships at raw prediction
     mid_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    # kernel for large ships at raw prediction
     large_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 4))
 
+    # kernel for small ships at resized prediction
     small_resize_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+    # kernel for middle-sized ships at resized prediction
     mid_resize_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7, 7))
+    # kernel for large ships at resized prediction
     large_resize_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))
 
+    # smoothed predictions at raw prediction
     small_kernel_smoothed = cv2.morphologyEx(prediction, cv2.MORPH_OPEN, small_kernel, iterations=1)
     mid_kernel_smoothed = cv2.morphologyEx(prediction, cv2.MORPH_OPEN, mid_kernel, iterations=1)
     large_kernel_smoothed = cv2.morphologyEx(prediction, cv2.MORPH_OPEN, large_kernel, iterations=1)
 
-    small_smooth = large_kernel_smoothed + mid_kernel_smoothed + small_kernel_smoothed
+    # average value
+    small_smooth = (large_kernel_smoothed + mid_kernel_smoothed + small_kernel_smoothed) / 3
 
     resized = cv2.resize(small_smooth, (768, 768), interpolation=cv2.INTER_NEAREST)
 
+    # smoothed predictions at resized prediction
     small_resized_smoothed = cv2.morphologyEx(resized, cv2.MORPH_OPEN, small_resize_kernel, iterations=1)
     mid_resized_smoothed = cv2.morphologyEx(resized, cv2.MORPH_OPEN, mid_resize_kernel, iterations=3)
     large_resized_smoothed = cv2.morphologyEx(resized, cv2.MORPH_OPEN, large_resize_kernel, iterations=5)
 
-    return small_resized_smoothed + mid_resized_smoothed + large_resized_smoothed
+    return (small_resized_smoothed + mid_resized_smoothed + large_resized_smoothed) / 3
 
 
 def prepare_mask(prediction):

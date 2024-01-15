@@ -1,5 +1,26 @@
 # Ship Semantic Segmentation
 
+# How to run it:
+
+## Requirements
+
+- python version = 3.9
+- `numpy` | `pip install numpy`
+- `scikit-learn` | `pip install scikit-learn`
+- `pandas` | `pip install pandas`
+- `tensorflow` | `pip install "tensorflow<2.11"`
+- `keras` | `pip install keras`
+- `tensorflow_examples` | `pip install git+https://github.com/tensorflow/examples.git`
+- `streamlit` | `pip install streamlit`
+- `cv2` | `pip install opencv-python`
+
+### To run the app execute:
+```streamlit run main.py```
+
+#### Example:
+
+# Solution Approach
+
 ## Data Preparation
 
 ### Mask creation
@@ -58,9 +79,7 @@ U-Net architecture is used to complete this task. The model consists of two part
 - encoder
 - decoder
 
-The encoder is created using pretrained tensorflow layers. To use it you have to install
-it ```pip install git+https://github.com/tensorflow/examples.git```
-
+The encoder is created using pretrained tensorflow layers.
 Here the piece of code:
 
 ```
@@ -142,7 +161,5 @@ def create_mask(prediction):
 ![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/d1003caf-b8c2-4d86-82f0-25947d864134)
 ![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/7c661e82-0df4-41a3-b6c3-45961e253b09)
 
-
-In ```cvs_predictions``` module you can call ```create_csv_prediction``` method to write down prediction to a csv file in encoded way. 
 
 ## The model in ```model``` directory is already trained and ready to use
