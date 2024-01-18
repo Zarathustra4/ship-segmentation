@@ -84,7 +84,7 @@ def run_ui():
     st.title("Image Semantic Segmentation Model")
     st.divider()
 
-    uploaded_image = st.file_uploader("Upload 768x768 image", type="jpg", )
+    uploaded_image = st.file_uploader("Upload image", type=["jpg", "png", "jpeg"])
 
     if uploaded_image is None:
         return
@@ -92,14 +92,16 @@ def run_ui():
     file_bytes = np.asarray(bytearray(uploaded_image.read()), dtype=np.uint8)
     image = cv2.imdecode(file_bytes, 1)
 
-    st.image(image, channels="BGR", width=768, caption="Your image")
+    height, width, _ = image.shape
+
+    st.image(image, channels="BGR", caption="Your image")
     image = prepare_image(image)
 
     prediction = model.predict(image)[0]
 
-    prediction = cv2.resize(prediction, (768, 768))
+    prediction = cv2.resize(prediction, (width, height))
 
     mask = create_mask(prediction)
     
-    st.image(prediction, caption="Model prediction", width=768)
-    st.image(mask, caption="Mask", width=768)
+    st.image(prediction, caption="Model prediction")
+    st.image(mask, caption="Mask")
