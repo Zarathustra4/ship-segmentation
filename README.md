@@ -15,7 +15,14 @@
 - `cv2` | `pip install opencv-python`
 
 ### To run the app execute:
-```streamlit run main.py```
+
+- `git clone https://github.com/Zarathustra4/ship-segmentation.git`
+- `cd ship-segmentation`
+- `py -m venv .env`
+- `.\.env\Scripts\activate`
+- `pip install -r requirements.txt`
+- `streamlit run main.py`
+
 
 #### Example:
 ![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/6f5cd48b-67fd-4133-9301-5bc782ebf3a8)
