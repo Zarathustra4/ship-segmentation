@@ -25,7 +25,7 @@
 
 
 #### Example:
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/6f5cd48b-67fd-4133-9301-5bc782ebf3a8)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/6e01d4fd-775c-4414-8d6e-99cc923b6b2b)
 
 # Solution Approach
 
@@ -94,11 +94,11 @@ Here the piece of code:
 base_model = tf.keras.applications.MobileNetV2(input_shape=[128, 128, 3], include_top=False)
 
 layer_names = [
-    'block_1_expand_relu',  # 128x128 -> 64x64
-    'block_3_expand_relu',  # 64x64 -> 32x32
-    'block_6_expand_relu',  # 32x32 -> 16x16
-    'block_13_expand_relu',  # 16x16 -> 8x8
-    'block_16_project',  # 8x8 -> 4x4
+    'block_1_expand_relu',  # 256x256 -> 128x128
+    'block_3_expand_relu',  # 128x128 -> 64x64
+    'block_6_expand_relu',  # 64x64 -> 32x32
+    'block_13_expand_relu',  # 32x32 -> 16x16
+    'block_16_project',  # 16x16 -> 8x8
 ]
 base_model_outputs = [base_model.get_layer(name).output for name in layer_names]
 
@@ -111,11 +111,11 @@ The decoder is a set of ```pix2pix``` layers, which scales back the image:
 
 ``` 
 [
-    pix2pix.upsample(512, 3),  # 4x4 -> 8x8
-    pix2pix.upsample(256, 3),  # 8x8 -> 16x16
-    pix2pix.upsample(128, 3),  # 16x16 -> 32x32
-    pix2pix.upsample(64, 3),  # 32x32 -> 64x64
-    pix2pix.upsample(32, 3),  # 64x64 -> 128x128
+    pix2pix.upsample(512, 3),  # 8x8 -> 16x16
+    pix2pix.upsample(256, 3),  # 16x16 -> 32x32 
+    pix2pix.upsample(128, 3),  # 32x32 -> 64x64
+    pix2pix.upsample(64, 3),  # 64x64 -> 128x128
+    pix2pix.upsample(32, 3),  # 128x128 -> 256x256 
 ]
 ```
 
@@ -127,7 +127,8 @@ To measure model performance we need to set proper metrics. Accuracy is a bad id
 because of unbalanced data - only few percent of an image is a ship if an image contains it at all.
 
 In this model I use __dice coefficient__ as metric. 
-``` 
+```
+y_pred = tf.where(y_pred > 0.5, 1.0, 0.0)
 intersection = K.sum(y_true * y_pred, axis=[1, 2, 3])
 union = K.sum(y_true, axis=[1, 2, 3]) + K.sum(y_pred, axis=[1, 2, 3])
 return K.mean((2. * intersection + smooth) / (union + smooth), axis=0)
@@ -135,14 +136,13 @@ return K.mean((2. * intersection + smooth) / (union + smooth), axis=0)
 
 ``` 
 model.compile(optimizer=Adam(learning_rate=0.01),
-              loss=dice_loss,
+              loss="binary_crossentropy",
               metrics=[dice_coef])
 ```
 
 The metric is within 0 and 1. The closer it is to 1, the better model performs.
 
-To optimize model parameter I use dice score loss, which is simply:
-```1 - dice_coef```
+To optimize model parameter I use binary crossentropy
 
 ## Performance
 To train the model we need to run it with such configurations:
@@ -164,10 +164,8 @@ def create_mask(prediction):
     f = np.vectorize(lambda x: 255 if x > 0.5 else 0)
     return f(prediction)
 ```
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/0557e714-1d68-4d46-8484-cfd713098f95)
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/ae6787cb-3f4c-4383-989e-0e222238b3c5)
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/d1003caf-b8c2-4d86-82f0-25947d864134)
-![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/7c661e82-0df4-41a3-b6c3-45961e253b09)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/3f93496f-c5fb-4732-b961-7ba7d077878b)
+![image](https://github.com/Zarathustra4/ship-segmentation/assets/68013193/eef44203-713c-4862-863b-5f10814ce4a3)
 
 
-## The model in ```model``` directory is already trained and ready to use
+## The model in ```trained_model``` directory is already trained and ready to use
